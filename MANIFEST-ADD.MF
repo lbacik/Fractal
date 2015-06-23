@@ -1,0 +1,4 @@
+Main-Class: sh/luka/fractal/gui
+Class-Path: commons-cli-1.2.jar jimageviewer.jar
+
+
