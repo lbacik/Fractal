@@ -41,8 +41,8 @@ import java.util.Random;
  */
 public abstract class FractalIFS extends Fractal {
 
-    protected int Iteration_minor = 0;
-    protected int Iteration_major = 0;
+    protected int Iteration_minor = 1;
+    protected int Iteration_major = 1;
     protected volatile int Iteration_minor_current;
     protected volatile int Iteration_major_current;
 
@@ -90,8 +90,8 @@ public abstract class FractalIFS extends Fractal {
         Random random = new Random();
         int RAND = 0;
 
-        for (int j = 0; j <= Iteration_major; j++) {
-            for (int i = 0; i <= Iteration_minor; i++) {
+        for (int j = 1; j <= Iteration_major; j++) {
+            for (int i = 1; i <= Iteration_minor; i++) {
 
                 Iteration_major_current = j;
                 Iteration_minor_current = i;
@@ -129,8 +129,8 @@ public abstract class FractalIFS extends Fractal {
 
     public int getCurrent() {
 
-        double unit = ((Iteration_major + 1) * (Iteration_minor + 1)) / Target_value;
-        double current = ((Iteration_major_current + 1) * (Iteration_minor_current + 1)) / unit;
+        double unit = (Iteration_major * Iteration_minor) / Target_value;
+        double current = ((Iteration_major_current - 1) * Iteration_minor + Iteration_minor_current) / unit;
 
         return (int) current;
     }

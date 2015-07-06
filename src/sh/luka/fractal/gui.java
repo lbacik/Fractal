@@ -50,7 +50,8 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
 
     public gui(Line2D scale) {
         super(scale);
-        System.out.println("gui - construct");
+        // System.out.println("gui - construct");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     protected Object clone() {
@@ -132,7 +133,7 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
             activityThread = new Thread(main);
             activityThread.start();
 
-            while (main.fractal == null) {
+            while (main.fractal == null || main.fractal.getInstance() == null) {
                 Thread.sleep(100);
             }
 
@@ -202,7 +203,7 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
 
     public static void main(String[] args) {
         // ruler is initializing with some default scale
-        System.out.println("gui - main");
+        // System.out.println("gui - main");
         new gui(new Line2D.Double(-1, 1, 1, -1));
     }
 
