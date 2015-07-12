@@ -27,13 +27,14 @@
 package sh.luka.fractal;
 
 import java.io.File;
+import java.io.Serializable;
 
 /**
  * Singleton design pattern - use "create" method to get instance of this class.
  *
  * @author Lukasz Bacik <mail@luka.sh>
  */
-public class Registry {
+public class Registry implements Serializable {
 
     private static Registry reg = null;
 
