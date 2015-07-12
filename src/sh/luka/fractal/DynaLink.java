@@ -30,8 +30,8 @@ import javax.tools.*;
 import java.awt.image.BufferedImage;
 
 /**
- * 
- * 
+ *
+ *
  * @author Lukasz Bacik <mail@luka.sh>
  */
 public class DynaLink {
@@ -52,24 +52,36 @@ public class DynaLink {
         return res;
     }
 
-    public BufferedImage runIt(String className, double[] scale) {
+    public void instantiateIt(String className) {
 
-        BufferedImage image = null;
-
-        try {
-
+        try{
             Class<?> thisClass = Class.forName(className);
             Object iClass = thisClass.newInstance();
 
             instance = ((Fractal) iClass);
             defaultScale = ((Fractal) iClass).defaultScale();
 
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public BufferedImage runIt(String className, double[] scale) {
+
+        BufferedImage image = null;
+
+        try {
+
+            if(instance == null)
+                instantiateIt(className);
+
             if (scale == null) {
-                image = ((Fractal) iClass).draw(defaultScale);
+                image = instance.draw(defaultScale);
             } else {
-                image = ((Fractal) iClass).draw(scale);
+                image = instance.draw(scale);
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -50,12 +50,20 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
 
     public gui(Line2D scale) {
         super(scale);
-        // System.out.println("gui - construct");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // it does not work as expected with cloning function :(
+        // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     protected Object clone() {
         Object result = null;
+
+        /**
+         * classes that does not implement Serializable interface
+         */
+        if(activityThread != null)  activityThread = null;
+        // this one below maybe should (?)
+        if(main.fractal != null)    main.fractal = null;
+        if(progressDialog != null)  progressDialog = null;
 
         try {
 
@@ -86,6 +94,10 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
         JMenuItem clone = new JMenuItem("Clone");
         clone.addActionListener(new CloneListener());
         fractal_menu.add(clone);
+
+        JMenuItem showReg = new JMenuItem("Show Registry");
+        showReg.addActionListener(new ShowRegistryListener());
+        fractal_menu.add(showReg);
 
         JMenuItem settings = new JMenuItem("Settings");
         settings.addActionListener(new SettingsListener());
@@ -126,6 +138,10 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
 
     }
 
+    /**
+     * calculate the fractal
+     *
+     */
     public void calculate() {
 
         try {
@@ -163,8 +179,8 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
 
                         rulerScale = new Line2D.Double(s[0], s[1], s[2], s[3]);
 
-                        if (main.image != null) {
-                            image.image = main.image;
+                        if (main.image.image != null) {
+                            image.image = main.image.image;
                             showImage(image.image);
                         } // else throw new Exception("image is null...");
                     }
@@ -177,8 +193,11 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
             JOptionPane.showMessageDialog(getParent(),
                     "Does not compute !", e.getMessage(),
                     JOptionPane.INFORMATION_MESSAGE);
-        }
 
+        } finally {
+
+            // progressDialog = null;
+        }
     }
 
     public void recalculate(SettingsWindowValues settings) {
@@ -228,7 +247,7 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
 
     }
 
-    protected class SettingsListener implements ActionListener {
+    protected class SettingsListener implements ActionListener, Serializable {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
@@ -236,6 +255,20 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
             setwin.guiObject = gui.this;
 
             SettingsWindowValues settings = new SettingsWindowValues();
+
+            /**
+             * After clonning the main.fractal will equal null
+             *
+             * @todo it shouldn't be here i think...
+             */
+            if(main.fractal == null) {
+                try {
+                    main.fractal = main.compile();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                main.fractal.instantiateIt(reg.drawingClassName);
+            }
 
             Integer i = main.fractal.getInstance().getWidth();
             settings.widthValue = i.toString();
@@ -261,4 +294,14 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
 
     }
 
+    protected class ShowRegistryListener implements ActionListener, Serializable {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+                System.out.println("Registry:");
+                main.reg.show();
+
+        }
+
+    }
 }

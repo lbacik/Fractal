@@ -29,8 +29,10 @@ package sh.luka.fractal;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.imageio.ImageIO;
+import sh.luka.gui.*;
 
 /**
  * This class contain the main logic of the project.
@@ -39,16 +41,17 @@ import javax.imageio.ImageIO;
  *
  * @author Lukasz Bacik <mail@luka.sh>
  */
-public class Main implements Runnable {
+public class Main implements Runnable, Serializable  {
 
     protected Registry reg;
     public DynaLink fractal = null;
-    public BufferedImage image;
+    public BufferedImageSerializable image;
 
     public Main(Registry registry) {
 
         // reg = Registry.create();
         reg = registry;
+        image = new BufferedImageSerializable();
 
     }
 
@@ -99,7 +102,7 @@ public class Main implements Runnable {
      */
     public void run() {
         try {
-            image = run(true);
+            image.image = run(true);
         } catch (Exception e) {
             System.out.println("Main.run() exception: " + e.getMessage());
         }
