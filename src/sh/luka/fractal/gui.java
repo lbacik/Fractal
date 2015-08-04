@@ -52,6 +52,9 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
         super(scale);
         // it does not work as expected with cloning function :(
         // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // JImageViewerRuler - scale type
+        righttop = true;
     }
 
     protected Object clone() {
