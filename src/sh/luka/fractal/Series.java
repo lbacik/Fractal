@@ -96,4 +96,16 @@ public class Series {
         return result;
     }
 
+    public int[] get_iteration_values(int i) {
+        // minor, major
+        int[] result = {0, 0};
+
+        double[] current = get_current_element(i);
+        // current[4] = major
+        // current[5] = minor
+
+        
+
+        return result;
+    }
 }

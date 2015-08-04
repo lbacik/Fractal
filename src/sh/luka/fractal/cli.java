@@ -206,9 +206,24 @@ public class cli {
                 throw new Exception("series size is 0...");
             }
 
+            // compile the fractal
+            main.fractal = main.compile();
+
             reg.useDefaulScale = false;
             int i = 0;
+            int major = 0, minor = 0;
             while (main.set_scale(i)) {
+
+                int[] iter = main.get_iteration_values(i);
+                minor = iter[0];
+                major = iter[1];
+
+                // set iter (major, minor)
+                ((FractalIFS) main.fractal.getInstance()).setIteration(minor, major);
+
+                // print some temp diagnostic information
+                // i, scale, iteration (major, minor)
+
                 BufferedImage image = main.run(false);
                 String fileName = String.format(reg.outFile + "-" + "%0" + reg.seriesNumberWidth + "d", i);
                 if (image != null) {
