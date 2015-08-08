@@ -223,7 +223,16 @@ public class cli {
 
                 // print some temp diagnostic information
                 // i, scale, iteration (major, minor)
-
+                System.out.printf("image: %d", i);
+                
+                System.out.print("scale: ");
+                for (int x = 0; x < reg.scale.length; x++) {
+                    System.out.print(reg.scale[x] + " ");
+                }
+                System.out.println();
+                
+                System.out.printf("loop values (major, minor): %d, %d", major, minor);
+                
                 BufferedImage image = main.run(false);
                 String fileName = String.format(reg.outFile + "-" + "%0" + reg.seriesNumberWidth + "d", i);
                 if (image != null) {
