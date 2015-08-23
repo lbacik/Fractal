@@ -107,7 +107,7 @@ public class Series {
         if (current != null) {
             int curr_index = steps.indexOf(current);
             if (curr_index == 0) {
-                double[] tmp = Arrays.copyOfRange(current, 5, 2);
+                double[] tmp = Arrays.copyOfRange(current, 5, 7);
                 result[0] = (int)tmp[0];
                 result[1] = (int)tmp[1];
             } else {
@@ -118,7 +118,7 @@ public class Series {
                 result[1] = (int)Math.round(current[6]/current[4]) * (i - sum_s);
             }
         }
-        
+
         return result;
     }
 }

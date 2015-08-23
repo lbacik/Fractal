@@ -160,6 +160,10 @@ public class cli {
                 }
             }
 
+            if (cmd.hasOption("i")) {
+                reg.startIteration = Integer.parseInt(cmd.getOptionValue("i"));
+            }
+
             result = true;
 
         } catch (NumberFormatException e) {
@@ -208,31 +212,32 @@ public class cli {
 
             // compile the fractal
             main.fractal = main.compile();
+            main.fractal.instantiateIt(reg.drawingClassName);
 
             reg.useDefaulScale = false;
-            int i = 0;
+            int i = reg.startIteration;
             int major = 0, minor = 0;
             while (main.set_scale(i)) {
 
                 int[] iter = main.get_iteration_values(i);
-                minor = iter[0];
-                major = iter[1];
+                major = iter[0];
+                minor = iter[1];
 
                 // set iter (major, minor)
                 ((FractalIFS) main.fractal.getInstance()).setIteration(minor, major);
 
                 // print some temp diagnostic information
                 // i, scale, iteration (major, minor)
-                System.out.printf("image: %d", i);
-                
+                System.out.println("image: " + i);
+
                 System.out.print("scale: ");
                 for (int x = 0; x < reg.scale.length; x++) {
                     System.out.print(reg.scale[x] + " ");
                 }
                 System.out.println();
-                
-                System.out.printf("loop values (major, minor): %d, %d", major, minor);
-                
+
+                System.out.println("loop values (major, minor):" + major + ", " + minor);
+
                 BufferedImage image = main.run(false);
                 String fileName = String.format(reg.outFile + "-" + "%0" + reg.seriesNumberWidth + "d", i);
                 if (image != null) {

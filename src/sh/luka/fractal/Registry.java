@@ -61,6 +61,7 @@ public class Registry implements Serializable {
     public Series series;
     public String seriesFile;
     public int seriesNumberWidth = 1;
+    public int startIteration = 0;
 
     public Registry() {
     }
