@@ -1,0 +1,15 @@
+/nbproject/
+/build/
+/dist/
+*.jar
+*.class
+*.*~
+out*
+log*
+*.png
+/release/
+/*.series
+build.xml
+manifest.mf
+/*.java
+#fractals/*.class

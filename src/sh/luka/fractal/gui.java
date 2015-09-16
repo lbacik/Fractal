@@ -52,6 +52,9 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
         super(scale);
         // it does not work as expected with cloning function :(
         // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // JImageViewerRuler - scale type
+        righttop = true;
     }
 
     protected Object clone() {
@@ -153,7 +156,7 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
                 Thread.sleep(100);
             }
 
-            progressDialog = new ProgressMonitor(gui.this, "Fr gen ...", null, 0,
+            progressDialog = new ProgressMonitor(gui.this, "processing...", null, 0,
                     main.fractal.getInstance().getTarget());
 
             activityMonitor = new Timer(500, new ActionListener() {

@@ -1,3 +1,3 @@
 #!/bin/sh
 
-java -cp fractal.jar sh.luka.fractal.cli $@ 
+java -cp 'fractal.jar:fractals:.' sh.luka.fractal.cli $@ 

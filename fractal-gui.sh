@@ -6,4 +6,4 @@
 # 
 #java -jar fractal.jar
 
-java -cp 'fractal.jar:.' sh.luka.fractal.gui 
+java -cp 'fractal.jar:fractals:.' sh.luka.fractal.gui 
