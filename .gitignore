@@ -11,3 +11,4 @@ log*
 *.series
 build.xml
 manifest.mf
+*.java
