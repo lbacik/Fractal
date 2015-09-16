@@ -156,7 +156,7 @@ public class gui extends JImageViewerRuler implements Cloneable, Serializable {
                 Thread.sleep(100);
             }
 
-            progressDialog = new ProgressMonitor(gui.this, "Fr gen ...", null, 0,
+            progressDialog = new ProgressMonitor(gui.this, "processing...", null, 0,
                     main.fractal.getInstance().getTarget());
 
             activityMonitor = new Timer(500, new ActionListener() {

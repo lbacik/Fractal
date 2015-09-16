@@ -8,7 +8,8 @@ out*
 log*
 *.png
 /release/
-*.series
+/*.series
 build.xml
 manifest.mf
-*.java
+/*.java
+#fractals/*.class
