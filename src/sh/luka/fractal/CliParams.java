@@ -40,14 +40,14 @@ public class CliParams extends Options {
         addOption(OptionBuilder.withArgName("FILE")
                 .withLongOpt("drawing-class")
                 .hasArg()
-                .withDescription("source file (without .java ext.)/ drawing class name *REQUIRED*")
+                .withDescription("source file (with .java ext.)/ drawing class file *REQUIRED*")
                 // .isRequired()
                 .create("d"));
 
         addOption(OptionBuilder.withArgName("FILE")
                 .withLongOpt("out")
                 .hasArg()
-                .withDescription("png output file (optional, if not given, file name of the drawing class will be used) ")
+                .withDescription("png output file (optional, if it is not given the filename the name of the drawing class will be used) ")
                 .create("o"));
 
         addOption(OptionBuilder.withLongOpt("show-registry")
@@ -71,6 +71,11 @@ public class CliParams extends Options {
                 .hasArg()
                 .withDescription("...")
                 .create("w"));
+
+        addOption(OptionBuilder.withArgName("INT")
+                .hasArg()
+                .withDescription("start iteration number (use with series)")
+                .create("i"));
     }
 
 }

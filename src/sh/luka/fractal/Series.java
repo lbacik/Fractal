@@ -96,4 +96,29 @@ public class Series {
         return result;
     }
 
+    public int[] get_iteration_values(int i) {
+        // minor, major
+        int[] result = {1, 1};
+
+        double[] current = get_current_element(i);
+        // current[5] = major
+        // current[6] = minor
+
+        if (current != null) {
+            int curr_index = steps.indexOf(current);
+            if (curr_index == 0) {
+                double[] tmp = Arrays.copyOfRange(current, 5, 7);
+                result[0] = (int)tmp[0];
+                result[1] = (int)tmp[1];
+            } else {
+                // double[] previous = steps.get(curr_index - 1);
+                int sum_s = get_sum_steps(curr_index);
+                //result[0] = (int)Math.round(current[5]/current[4]) * (i - sum_s);
+                result[0] = (int)current[5];
+                result[1] = (int)Math.round(current[6]/current[4]) * (i - sum_s);
+            }
+        }
+
+        return result;
+    }
 }

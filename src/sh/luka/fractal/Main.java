@@ -129,4 +129,10 @@ public class Main implements Runnable, Serializable  {
         }
         return result;
     }
+
+    public int[] get_iteration_values(int i) {
+        int[] result;
+        result = reg.series.get_iteration_values(i);
+        return result;
+    }
 }

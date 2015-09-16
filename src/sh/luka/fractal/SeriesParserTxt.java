@@ -38,12 +38,12 @@ import java.util.ArrayList;
 /**
  *
  * @todo documentation!
- * 
+ *
  * @author Lukasz Bacik <mail@luka.sh>
  */
 public class SeriesParserTxt extends SeriesParser {
 
-    protected int linelength = 4;
+    protected int linelength = 6;
 
     public ArrayList<double[]> parse(String fileName) {
 
