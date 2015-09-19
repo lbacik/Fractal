@@ -13,8 +13,8 @@ The program "drawing" fractals (and not only), with cli and gui interfaces.
 
 NOTICE: Version 0.1 is not a part of this repo, it is available only on javaforge.com 
 
-Instalation / Compiling 
------------
+Installation / Compiling 
+------------------------
 
 First of all you have do download the Fractal program code - plese use git or just download the zip archive, I assume that you downloaded the code to the "Fractal" directory at your hard drive..
 
