@@ -53,15 +53,24 @@ public class Registry implements Serializable {
 
     // filename without .java extension
     public String inFile;
-    public String outFile;
+    public String outFile = null;
     public double[] scale = new double[4];
     public boolean useDefaulScale = true;
     public boolean processSeries = false;
-    public String drawingClassName;
+    public String drawingClassName = null;
     public Series series;
     public String seriesFile;
     public int seriesNumberWidth = 1;
     public int startIteration = 0;
+    /**
+     * 0 - offline
+     * 1 - web service client
+     */
+    public int mode = 0;
+    public String wsurl = null;
+    public String temporary = null;
+    public boolean skipImages = false;
+    public String token = null;
 
     public Registry() {
     }

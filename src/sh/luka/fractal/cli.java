@@ -27,13 +27,25 @@
 package sh.luka.fractal;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.URL;
+import java.util.List;
+import javax.imageio.ImageIO;
+import javax.xml.ws.BindingProvider;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+
+import sh.luka.fractal.wsclient.FractalWSImplService;
+import sh.luka.fractal.wsclient.FractalWSImpl;
 
 /**
  * Class to handle the cli interface
@@ -114,13 +126,15 @@ public class cli {
 
             if (cmd.hasOption("o")) {
                 reg.outFile = cmd.getOptionValue("o");
-            } else {
+            } else if (reg.drawingClassName != null) {
                 reg.outFile = reg.drawingClassName;
             }
 
-            f = new File(reg.outFile);
-            if (f.exists()) {
-                throw new Exception("Output file: " + reg.outFile + " already exists!");
+            if (reg.outFile != null) {
+                f = new File(reg.outFile);
+                if (f.exists()) {
+                    throw new Exception("Output file: " + reg.outFile + " already exists!");
+                }
             }
 
             if (cmd.hasOption("s")) {
@@ -164,6 +178,23 @@ public class cli {
                 reg.startIteration = Integer.parseInt(cmd.getOptionValue("i"));
             }
 
+            if (cmd.hasOption("c")) {
+                reg.mode = 1;
+                reg.wsurl = cmd.getOptionValue("c");
+            }
+
+            if (cmd.hasOption("t")) {
+                reg.temporary = cmd.getOptionValue("t");
+            }
+
+            if (cmd.hasOption("skip-images")) {
+                reg.skipImages = true;
+            }
+
+            if (cmd.hasOption("token")) {
+                reg.token = cmd.getOptionValue("token");
+            }
+
             result = true;
 
         } catch (NumberFormatException e) {
@@ -193,7 +224,11 @@ public class cli {
 
         main = new Main(reg);
 
-        if (reg.processSeries == false) {
+        if (reg.mode == 1) {
+
+            WSClient(main);
+
+        } else if (reg.processSeries == false) {
 
             BufferedImage image = main.run(true);
             if (image != null) {
@@ -249,5 +284,87 @@ public class cli {
             }
         }
 
+    }
+
+    // how to generate the service class:
+    // http://www.codejava.net/java-ee/web-services/java-web-services-binary-data-transfer-example-base64-encoding
+    protected static void WSClient(Main main) throws Exception {
+
+        FractalWSImplService client = new FractalWSImplService(new URL(reg.wsurl));
+        FractalWSImpl service = client.getFractalWSImplPort();
+
+        while (service.getSessionID(reg.token) > 0) {
+
+            // download fractal file
+            String fractalCode = service.getFractal(reg.token);
+            String fractalFileName = service.getFractalFileName(reg.token);
+
+            String tempFile = reg.temporary != null
+                    ? reg.temporary + "/" + fractalFileName
+                    : fractalFileName;
+
+            Writer out = new BufferedWriter(
+                            new OutputStreamWriter(
+                                new FileOutputStream(tempFile, false),
+                                "UTF-8"
+                                )
+                            );
+            try {
+                out.write(fractalCode);
+            } finally {
+                out.close();
+            }
+
+            reg.inFile = tempFile;
+            reg.setDrawingClassName();
+
+            if (reg.outFile == null) {
+                reg.outFile = reg.drawingClassName;
+            }
+
+            main.fractal = main.compile();
+            main.fractal.instantiateIt(reg.drawingClassName);
+
+            reg.useDefaulScale = false;
+
+            int i;
+            while((i = service.getCurrentIteration(reg.token)) >= 0) {
+
+                List<Integer> fractalIterList = service.getIterationNumbers(reg.token);
+
+                int major = fractalIterList.get(0).intValue();
+                int minor = fractalIterList.get(1).intValue();
+
+                ((FractalIFS) main.fractal.getInstance()).setIteration(minor, major);
+
+                List<Double> scaleList = service.getScale(reg.token);
+
+		for (int j = 0; j < scaleList.size(); j++) {
+                    reg.scale[j] = scaleList.get(j);
+		}
+
+                BufferedImage image = main.run(false);
+
+                if( reg.skipImages == false ) {
+                    String fileName = String.format(reg.outFile + "-" + "%0" + reg.seriesNumberWidth + "d", i);
+                    if (image != null) {
+                        main.save(image, fileName);
+                    } else {
+                        throw new Exception("image is null...");
+                    }
+                }
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(image, "png", baos);
+                byte[] imageBytes = baos.toByteArray();
+
+                while (service.uploadImage(reg.token, imageBytes) == false) {
+                    System.out.println ("Failed to send image's file...");
+                }
+
+                service.finishSuccessIteration(reg.token);
+
+           }
+        }
     }
 }
