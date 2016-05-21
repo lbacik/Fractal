@@ -13,3 +13,4 @@ build.xml
 manifest.mf
 /*.java
 #fractals/*.class
+tmp/
