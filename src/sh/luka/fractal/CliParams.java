@@ -76,6 +76,29 @@ public class CliParams extends Options {
                 .hasArg()
                 .withDescription("start iteration number (use with series)")
                 .create("i"));
+
+        addOption(OptionBuilder.withArgName("URI")
+                .withLongOpt("client")
+                .hasArg()
+                .withDescription("WSDL URL")
+                .create("c"));
+
+        addOption(OptionBuilder.withArgName("DIR")
+                .withLongOpt("temporary-dir")
+                .hasArg()
+                .withDescription("")
+                .create("t"));
+
+        addOption(OptionBuilder.withLongOpt("skip-images")
+                .withDescription("")
+                .create());
+
+        addOption(OptionBuilder.withArgName("token")
+                .withLongOpt("token")
+                .hasArg()
+                .withDescription("")
+                .create());
+
     }
 
 }
