@@ -99,6 +99,24 @@ public class CliParams extends Options {
                 .withDescription("")
                 .create());
 
+        addOption(OptionBuilder.withArgName("FILE")
+                .withLongOpt("save-partial")
+                .hasArg()
+                .withDescription("")
+                .create());
+
+        addOption(OptionBuilder.withArgName("FILE")
+                .withLongOpt("continue")
+                .hasArg()
+                .withDescription("")
+                .create());
+
+        addOption(OptionBuilder.withArgName("INT")
+                .withLongOpt("save-partial-interval")
+                .hasArg()
+                .withDescription("")
+                .create());
+
     }
 
 }

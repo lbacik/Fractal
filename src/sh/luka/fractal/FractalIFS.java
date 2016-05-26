@@ -45,6 +45,8 @@ public abstract class FractalIFS extends Fractal {
     protected int Iteration_major = 1;
     protected volatile int Iteration_minor_current;
     protected volatile int Iteration_major_current;
+    public int global_J = 1;
+    public int global_I = 1;
 
     /**
      * This method define the IFS ratio (AA .. AF) (see inner class
@@ -61,9 +63,9 @@ public abstract class FractalIFS extends Fractal {
      */
     protected BufferedImage draw() {
 
-        BufferedImage image = new BufferedImage(WIDTH, HEIGHT, IMG_TYPE);
-        ColorModel model = image.getColorModel();
-        WritableRaster raster = image.getRaster();
+        BufferedImage img = this.image.image;
+        ColorModel model = img.getColorModel();
+        WritableRaster raster = img.getRaster();
 
         Color fcolor;
 
@@ -90,8 +92,12 @@ public abstract class FractalIFS extends Fractal {
         Random random = new Random();
         int RAND = 0;
 
-        for (int j = 1; j <= Iteration_major; j++) {
-            for (int i = 1; i <= Iteration_minor; i++) {
+        for (int j = global_J; j <= Iteration_major; j++) {
+            global_J = j;
+            if (global_I == Iteration_minor) {
+                global_I = 1;
+            }
+            for (int i = global_I; i <= Iteration_minor; i++) {
 
                 Iteration_major_current = j;
                 Iteration_minor_current = i;
@@ -110,11 +116,11 @@ public abstract class FractalIFS extends Fractal {
                     raster.setDataElements(x2, y2,
                             model.getDataElements(fcolor.getRGB(), null));
                 }
-
+                global_I = i;
             }
         }
 
-        return image;
+        return img;
     }
 
     public int[] getIteration() {
@@ -125,6 +131,8 @@ public abstract class FractalIFS extends Fractal {
     public void setIteration(int minor, int major) {
         Iteration_minor = minor;
         Iteration_major = major;
+        global_J = 1;
+        global_I = 1;
     }
 
     public int getCurrent() {

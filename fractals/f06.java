@@ -16,14 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import java.awt.image.BufferedImage;
 import sh.luka.fractal.*;
+import sh.luka.gui.BufferedImageSerializable;
 
 public class f06 extends FractalIFS {
 
     public f06() {
-        WIDTH = 2500;
-        HEIGHT= 5000;
-        IMG_TYPE = java.awt.image.BufferedImage.TYPE_INT_RGB;
+        createCanvas(2500, 5000);
         Iteration_minor = 100000;
     }
 

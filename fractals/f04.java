@@ -22,9 +22,7 @@ import sh.luka.fractal.FractalIFS;
 public class f04 extends FractalIFS {
 
     public f04() {
-        WIDTH = 10000;
-        HEIGHT = 10000;
-        IMG_TYPE = java.awt.image.BufferedImage.TYPE_INT_RGB;
+        createCanvas(10000, 10000);
         Iteration_minor = 100000000;
     }
 

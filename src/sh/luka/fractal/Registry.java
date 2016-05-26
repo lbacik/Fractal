@@ -72,6 +72,10 @@ public class Registry implements Serializable {
     public boolean skipImages = false;
     public String token = null;
 
+    public String savePartialFile = null;
+    public int savePartialInterval = 0;
+    public String continueFromFile = null;
+
     public Registry() {
     }
 

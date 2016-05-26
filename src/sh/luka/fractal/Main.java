@@ -28,8 +28,15 @@ package sh.luka.fractal;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import sh.luka.gui.*;
@@ -46,6 +53,23 @@ public class Main implements Runnable, Serializable  {
     protected Registry reg;
     public DynaLink fractal = null;
     public BufferedImageSerializable image;
+    private Thread savePartialThread = null;
+
+    class SavePartialThread implements Runnable {
+
+        @Override
+        public void run() {
+
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    Thread.sleep(1000 * 60 * reg.savePartialInterval);
+                    savePartial();
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SavePartialThread.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
     public Main(Registry registry) {
 
@@ -66,9 +90,70 @@ public class Main implements Runnable, Serializable  {
         return dynaLink;
     }
 
+    protected void savePartial() {
+
+        ObjectOutputStream out = null;
+        FractalIFS fractalObj = null;
+        try {
+            out = new ObjectOutputStream(new FileOutputStream(reg.savePartialFile));
+            fractalObj = (FractalIFS)fractal.getInstance();
+            out.writeObject(fractalObj);
+            // out.writeObject(reg);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                out.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        java.util.Date date = new java.util.Date();
+        System.out.println(date.toString()
+                + " partial save: saved! J: "
+                + fractalObj.global_J + ", I: "
+                + fractalObj.global_I
+        );
+    }
+
+    protected boolean restorePartial() {
+
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new FileInputStream(reg.continueFromFile));
+
+            Fractal fractalObj = (Fractal)in.readObject();
+            fractal.setInstance(fractalObj);
+            // reg = (Registry)in.readObject();
+
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return true;
+    }
+
     public BufferedImage run(boolean alwaysCompile) throws Exception {
 
         BufferedImage image = null;
+
+        if (reg.continueFromFile != null) {
+            restorePartial();
+        }
+
+        if (reg.savePartialFile != null && reg.savePartialInterval > 0) {
+            runSavePartialThread();
+        }
+
         try {
 
             if (fractal == null /*|| alwaysCompile == true*/) {
@@ -90,6 +175,11 @@ public class Main implements Runnable, Serializable  {
 
         } finally {
 
+            // finish the save partial thread
+            if (savePartialThread != null) {
+                savePartialThread.interrupt();
+            }
+            // delete save partial file
         }
 
         return image;
@@ -134,5 +224,12 @@ public class Main implements Runnable, Serializable  {
         int[] result;
         result = reg.series.get_iteration_values(i);
         return result;
+    }
+
+    private void runSavePartialThread() {
+
+        Runnable r = new SavePartialThread();
+        savePartialThread = new Thread(r);
+        savePartialThread.start();
     }
 }

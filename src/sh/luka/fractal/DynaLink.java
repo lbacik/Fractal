@@ -96,4 +96,8 @@ public class DynaLink {
     public Fractal getInstance() {
         return instance;
     }
+
+    public void setInstance(Fractal fractal) {
+        instance = fractal;
+    }
 }
