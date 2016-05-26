@@ -204,7 +204,7 @@ public class cli {
             }
 
             if (cmd.hasOption("continue")) {
-                
+
                 String continueFromFile = cmd.getOptionValue("continue");
 
                 f = new File(continueFromFile);
@@ -362,6 +362,18 @@ public class cli {
 		for (int j = 0; j < scaleList.size(); j++) {
                     reg.scale[j] = scaleList.get(j);
 		}
+
+                // print some temp diagnostic information
+                // i, scale, iteration (major, minor)
+                System.out.println("image: " + i);
+
+                System.out.print("scale: ");
+                for (int x = 0; x < reg.scale.length; x++) {
+                    System.out.print(reg.scale[x] + " ");
+                }
+                System.out.println();
+
+                System.out.println("loop values (major, minor):" + major + ", " + minor);
 
                 BufferedImage image = main.run(false);
 
