@@ -28,6 +28,8 @@
 package sh.luka.fractal;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
+import sh.luka.gui.BufferedImageSerializable;
 
 /**
  * The base class for all drawing objects (fractals and... others :))
@@ -36,7 +38,7 @@ import java.awt.image.BufferedImage;
  *
  * @author Lukasz Bacik <mail@luka.sh>
  */
-public abstract class Fractal implements FractalProgressMonitor {
+public abstract class Fractal implements Serializable, FractalProgressMonitor {
 
     /**
      * The width of the resulting graphic in pixels.
@@ -67,6 +69,16 @@ public abstract class Fractal implements FractalProgressMonitor {
      */
     private double[] scale = new double[4];
 
+    protected BufferedImageSerializable image;
+
+    protected void createCanvas(int width, int height) {
+        WIDTH = width;
+        HEIGHT= height;
+        IMG_TYPE = java.awt.image.BufferedImage.TYPE_INT_RGB;
+        BufferedImage im = new BufferedImage(WIDTH, HEIGHT, IMG_TYPE);
+        image = new BufferedImageSerializable();
+        image.image = im;
+    }
     /**
      * This method should define default scale of the image/fractal
      *

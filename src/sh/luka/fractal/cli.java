@@ -195,6 +195,26 @@ public class cli {
                 reg.token = cmd.getOptionValue("token");
             }
 
+            if (cmd.hasOption("save-partial")) {
+                reg.savePartialFile = cmd.getOptionValue("save-partial");
+            }
+
+            if (cmd.hasOption("save-partial-interval")) {
+                reg.savePartialInterval = Integer.parseInt(cmd.getOptionValue("save-partial-interval"));
+            }
+
+            if (cmd.hasOption("continue")) {
+                
+                String continueFromFile = cmd.getOptionValue("continue");
+
+                f = new File(continueFromFile);
+                if (f.exists() && !f.isDirectory()) {
+
+                    reg.continueFromFile = cmd.getOptionValue("continue");
+
+                }
+            }
+
             result = true;
 
         } catch (NumberFormatException e) {
