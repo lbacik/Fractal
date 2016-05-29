@@ -390,6 +390,7 @@ public class cli {
                 ImageIO.write(image, "png", baos);
                 byte[] imageBytes = baos.toByteArray();
 
+                System.out.println("Sending the file...");
                 while (service.uploadImage(reg.token, imageBytes) == false) {
                     System.out.println ("Failed to send image's file...");
                 }

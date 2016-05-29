@@ -175,11 +175,22 @@ public class Main implements Runnable, Serializable  {
 
         } finally {
 
+            System.out.println("Finishing Main.run method...");
             // finish the save partial thread
             if (savePartialThread != null) {
                 savePartialThread.interrupt();
             }
             // delete save partial file
+            if (reg.continueFromFile != null) {
+
+                File f = new File(reg.continueFromFile);
+                if (f.exists() && !f.isDirectory()) {
+                    if (!f.delete()) {
+                        System.out.println("Cant remove partial file :(... exiting...");
+                        System.exit(1);
+                    }
+                }
+            }
         }
 
         return image;
