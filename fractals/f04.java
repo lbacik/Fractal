@@ -22,7 +22,7 @@ import sh.luka.fractal.FractalIFS;
 public class f04 extends FractalIFS {
 
     public f04() {
-        createCanvas(10000, 10000);
+        createCanvas(1000, 1000);
         Iteration_minor = 100000000;
     }
 
